@@ -53,15 +53,6 @@
   #count { font-size: clamp(80px, 25vh, 200px); font-weight: 900; text-shadow: 0 6px 0 #0008; }
 
   /* ===== 최대 효과 ===== */
-  #board.shake { animation: shake .35s; }
-  @keyframes shake {
-    0%,100% { transform: translate(0,0) rotate(0); }
-    15% { transform: translate(-12px, 6px) rotate(-1.2deg); }
-    30% { transform: translate(10px, -8px) rotate(1deg); }
-    45% { transform: translate(-8px, -4px) rotate(-.8deg); }
-    60% { transform: translate(7px, 6px) rotate(.6deg); }
-    80% { transform: translate(-3px, 2px); }
-  }
   .corpse { position: absolute; z-index: 4; pointer-events: none; transform-origin: 50% 80%; animation: die 2.4s cubic-bezier(.45,.05,.55,.95) forwards; }
   .corpse img { width: 100%; display: block; animation: deadtint 2.4s forwards; }
   @keyframes deadtint {
@@ -78,8 +69,6 @@
     38% { transform: translate(0,0) scale(1) rotate(0); }
     100% { transform: translate(var(--fx), -300%) scale(.4) rotate(var(--rot)); opacity: 0; }
   }
-  .xeyes { position: absolute; left: 0; right: 0; top: 36%; display: flex; justify-content: center; gap: 22%;
-    font-weight: 900; color: #111; font-size: var(--fs); line-height: 1; text-shadow: 0 0 3px #fff; }
   .ghost { position: absolute; z-index: 6; pointer-events: none; font-size: clamp(34px, 8vh, 64px);
     transform: translate(-50%, 0); animation: ghost 2.2s ease-out forwards; filter: drop-shadow(0 0 8px #fff); }
   @keyframes ghost {
@@ -158,6 +147,7 @@
   });
 
   // 효과음: 죽음.m4a (여러 번 겹쳐 재생 가능하도록 매번 복제)
+  new Image().src = 'assets/face_dead.png';
   const sfx = new Audio(encodeURI('죽음.m4a'));
   sfx.preload = 'auto';
   function playSfx() {
@@ -181,7 +171,7 @@
     corpse.className = 'corpse';
     corpse.style.cssText = `left:${cx - fw / 2}px; top:${cy - fh}px; width:${fw}px;` +
       `--fx:${rnd(-120, 120)}px; --rot:${rnd(-1080, 1080)}deg;`;
-    corpse.innerHTML = '<img src="assets/face.png" alt=""><div class="xeyes" style="--fs:' + fw * 0.2 + 'px"><span>✕</span><span>✕</span></div>';
+    corpse.innerHTML = '<img src="assets/face_dead.png" alt="">';
     add(corpse, 2450);
 
     // 2) 유령(영혼)이 빠져나감
@@ -211,8 +201,6 @@
       add(r, 700);
     });
 
-    // 5) 화면 흔들림
-    board.classList.remove('shake'); void board.offsetWidth; board.classList.add('shake');
 
     // 6) 점수 튕김 + 콤보 텍스트
     scoreEl.classList.remove('bump'); void scoreEl.offsetWidth; scoreEl.classList.add('bump');
